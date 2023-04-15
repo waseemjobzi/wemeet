@@ -1,19 +1,5 @@
 // const { pick, omit, has, isEmpty } = require("lodash");
-// const { mailTemplateName } = require("../../config/constants");
-// const { gee } = require("../../config/globalEvent");
-// const { roles: userRoles, roles } = require("../../config/roles");
-// const { getMailSubjects } = require("../../utils/mail");
-// const { getRandomNumber, freelancerCodeNames } = require("../../utils/misc");
 // const { sendError } = require("../../utils/response");
-// const Applicant = require("../applicant/applicant.model");
-// const Company = require("../company/company.model");
-// const Job = require("../job/job.model");
-// const jobService = require("../job/job.service");
-// const mailService = require("../mail/mail.service");
-// const Project = require("../project/project.model");
-// const projectService = require("../project/project.service");
-// const Recruiter = require("../recruiter/recruiter.model");
-// const User = require("./user.model");
 
 // class UserService {
 //   recruiterUpdateCompanyFields = [
@@ -38,80 +24,7 @@
 //     "email",
 //   ];
 
-//   updateRecruiter = async (userId, body, username) => {
-//     const companyData = pick(body, this.recruiterUpdateCompanyFields);
-//     const userData = omit(body, this.recruiterUpdateCompanyFields);
-
-//     if (companyData.address && companyData.address.coords) {
-//       companyData.address.coords = {
-//         coordinates: companyData.address.coords,
-//       };
-//     }
-
-//     if (userData.search_distance) {
-//       userData["preferences.search_distance"] = userData.search_distance;
-//       delete userData.search_distance;
-//     }
-
-//     if (userData.last_location && userData.last_location.coords) {
-//       userData.last_location.coords = {
-//         coordinates: userData.last_location.coords,
-//       };
-//     }
-//     if (body.coupon_code) {
-//       userData.coupon_code = body.coupon_code;
-//       userData.deviceId = body.deviceId;
-//     }
-
-//     if (has(userData, "gender")) {
-//       const recruiterJobs = await Job.find({
-//         recruiter: userId,
-//         active: true,
-//         blocked: false,
-//       })
-//         .select("_id")
-//         .lean();
-//       const jobIds = recruiterJobs.map((item) => item._id);
-
-//       await jobService.updateJobsOnES(jobIds, {
-//         recruiter_gender: userData.gender,
-//       });
-
-//       await Recruiter.updateOne(
-//         { userID: userId },
-//         { gender: userData.gender }
-//       );
-//       delete userData.gender;
-//     }
-//     userData.username = username;
-//     userData.isAppDownloaded = true;
-//     if (body.current_city) {
-//       userData.user_city = body.current_city;
-//     }
-//     let updatedUser;
-//     try {
-//       updatedUser = await User.findByIdAndUpdate(userId, userData, {
-//         new: true,
-//       });
-//     } catch (error) {
-//       throw new Error(
-//         "This email already exists. Please use a different email or write to us at support@jobzi.in"
-//       );
-//     }
-
-//     const recruiter = await Recruiter.findOne({ userID: userId }).lean();
-//     let company = recruiter.companies[0];
-
-//     const updatedCompany = await Company.findByIdAndUpdate(
-//       company,
-//       companyData,
-//       {
-//         new: true,
-//       }
-//     );
-
-//     return { account: updatedUser, company: updatedCompany };
-//   };
+  
 
 //   updateCandidate = async (userId, body, username) => {
 //     const accountData = pick(body, this.updateCandidateAccountFields);

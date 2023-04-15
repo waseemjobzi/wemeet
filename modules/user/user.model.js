@@ -2,57 +2,57 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const AddressSchema = require("../common/address.schema");
 
-
-
 const UserSchema = new mongoose.Schema(
   {
-    email: {
-      type: String,
-      unique: true,
-      lowercase: true,
-      sparse: true,
-    },
-    password: {
-      type: String,
-      minlength: 0,
-      maxlength: 128,
-    },
+    // email: {
+    //   type: String,
+    //   unique: true,
+    //   lowercase: true,
+    //   sparse: true,
+    // },
+    // password: {
+    //   type: String,
+    //   minlength: 0,
+    //   maxlength: 128,
+    // },
     phone_number: {
       type: String,
       unique: true,
     },
-    role: {
-      type: String,
-    },
     name: {
       type: String,
     },
-    parent_category: {
+    age: {
+      type: Number,
+    },
+    gender: {
       type: String,
     },
-    // image: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Upload",
+    preferedGender: {
+      type: [String],
+    },
+    image: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Upload",
+    },
+    bio: {
+      type: String,
+    },
+    profession: {
+      type: String,
+    },
+    movies: {
+      type: [String],
+    },
+
+    food: {
+      type: [String],
+    },
+
+    // blocked: {
+    //   type: Boolean,
+    //   default: false,
     // },
-    image_url: {
-      type: String,
-    },
-    metadata: {
-      type: Object,
-      default: null,
-    },
-    coupon_code: {
-      type: String,
-    },
-
-    deviceId: {
-      type: String,
-    },
-
-    blocked: {
-      type: Boolean,
-      default: false,
-    },
     confirmed: {
       type: Boolean,
       default: false,
@@ -72,22 +72,21 @@ const UserSchema = new mongoose.Schema(
     last_location: {
       type: AddressSchema,
     },
-    branch_location: {
-      type: AddressSchema,
-    },
+    // branch_location: {
+    //   type: AddressSchema,
+    // },
     user_city: {
       type: String,
     },
-   
+
     isAppDownloaded: {
       type: Boolean,
       default: false,
     },
-   
+
     username: {
       type: String,
     },
-
   },
   {
     timestamps: true,
@@ -105,14 +104,6 @@ UserSchema.methods = {
   },
 };
 
-UserSchema.statics.initializePackage = async function () {
-  const defaultPackage = await Package.findOne({ pid: 1 })
-    .select("expiry")
-    .lean();
-  const expiry = new Date();
-  expiry.setDate(expiry.getDate() + defaultPackage.expiry);
-  return { plan: defaultPackage._id, end: expiry, trialing: true };
-};
 
 UserSchema.pre("save", async function (next) {
   try {

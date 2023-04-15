@@ -9,7 +9,7 @@ const { default: mongoose } = require("mongoose");
 
 mongoose
   .connect(
-    `mongodb+srv://jobziadmin:jobzi123.@jobzidev.zyjtr.mongodb.net/wemeet-dev?retryWrites=true&w=majority`,
+    process.env.MONGODB_URI,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,

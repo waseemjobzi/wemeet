@@ -13,17 +13,6 @@ function generateRandomPassword(length = 8) {
   }
   return retVal;
 }
-
-// function isAdmin(req, res, next) {
-//   if (req.user.role !== roles[4]) {
-//     return res.status(401).json({
-//       message: "Unauthorized",
-//     });
-//   }
-
-//   next();
-// }
-
 module.exports = {
   generateOTP,
   generateRandomPassword,
