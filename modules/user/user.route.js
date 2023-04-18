@@ -6,11 +6,15 @@ const router = Router();
 
 router
   .route("/create")
-  .put(checkAuth,controller.updateOne);
-  router
+  .put(checkAuth, controller.updateOne);
+router
   .route("/image")
-  .post(checkAuth, memUpload.array("files"),controller.uploadImage)
+  .post(checkAuth, memUpload.array("files"), controller.uploadImage)
   .put(checkAuth, controller.removeImage);
+router.route("/updateImage").post(checkAuth, memUpload.array("files"), controller.updateImage)
+router.route("/:id").get(checkAuth, controller.findById);
+router.route("/uploadVideo").post(checkAuth, memUpload.single("file"), controller.uploadVideo)
+
 
 
 

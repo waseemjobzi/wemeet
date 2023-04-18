@@ -32,7 +32,6 @@ const localUpload = multer({
 const memStorage = multer.memoryStorage();
 const memUpload = multer({
   storage: memStorage,
-  fileFilter,
 });
 
 module.exports = {

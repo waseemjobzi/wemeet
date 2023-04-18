@@ -39,12 +39,14 @@ async function s3DeleteObjects(key, bucket = process.env.AWS_S3_BUCKET) {
         if (err) {
           reject(err);
         } else {
+          console.log('data', data)
           resolve(data);
         }
       }
     );
   });
 }
+
 
 async function convertFile(fileBuffer, ext = ".pdf") {
   const convertedBuf = await libre.convertAsync(fileBuffer, ext, undefined);

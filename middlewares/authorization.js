@@ -27,7 +27,7 @@ async function checkAuth(req, res, next) {
       )
       .lean()
       .exec();
-      console.log('user', user)
+      // console.log('user', user)
     if (!user) {
       return res.status(401).json({
         success: false,

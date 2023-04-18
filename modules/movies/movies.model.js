@@ -1,26 +1,28 @@
 const mongoose = require("mongoose");
-const UploadSchema = new mongoose.Schema(
+const MoviesSchema = new mongoose.Schema(
   {
     originalname: {
-      type: [String],
+      type: String,
       required: true,
     },
-    mimetype: {
-      type: String,
+    type: {
+      type: String
+    },
+    name: {
+      type: String
     },
     bucket: {
       type: String,
       required: true,
     },
     key: {
-      type: [String],
+      type: String,
       required: true,
     },
     location: {
-      type: [String],
+      type: String,
       required: true,
     },
-    // locations: [{ location: { type: String }, show: { type: Boolean, default: true } }],
     deleted: {
       type: Date,
     },
@@ -31,4 +33,4 @@ const UploadSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Upload", UploadSchema);
+module.exports = mongoose.model("Movies", MoviesSchema);
