@@ -73,43 +73,41 @@ class Controller {
   };
   removeImage = async (req, res, next) => {
     const { _id: userId } = req.user;
-    const { image_key: location } = req.body;
-    const associatedApplicant = await UserModel.findById({ _id: userId }).populate("image")
+    const { url } = req.body;
+    const associatedApplicant = await UserModel.findById({ _id: userId })
       .lean()
       .exec();
-    console.log(location, 'associatedApplicant', associatedApplicant)
     if (!associatedApplicant) {
-      return sendError(next, "User does not exist",401);
+      return sendError(next, "User does not exist", 401);
     }
     try {
-      let pic = await uploadModel.updateOne(
-        { _id: userId },
-        { $pull: { location:location } }, { new: true }
+      await uploadModel.updateOne(
+        { _id: associatedApplicant.image },
+        { $pull: { location: url } }
       );
-      // await s3DeleteObjects([{ Key: key }]);
     } catch (err) {
       return next(err);
     }
-
-    // try {
-    //   await uploadModel.deleteOne({ key });
-    // } catch (err) {
-    //   return next(err);
-    // }
-
-    // try {
-    //   await UserModel.updateOne(
-    //     { _id: associatedApplicant._id },
-    //     {
-    //       image: null,
-    //       image_url: null,
-    //     }
-    //   );
-    // } catch (err) {
-    //   return next(err);
-    // }
-
     sendSuccess(res, { message: "image removed" });
+  };
+  removeVedio = async (req, res, next) => {
+    const { _id: userId } = req.user;
+    const { url } = req.body;
+    const associatedApplicant = await UserModel.findById({ _id: userId })
+      .lean()
+      .exec();
+    if (!associatedApplicant) {
+      return sendError(next, "User does not exist", 401);
+    }
+    try {
+      let pic = await uploadModel.updateOne(
+        { _id: associatedApplicant.vedio },
+        { $pull: { location: url } }
+      );
+    } catch (err) {
+      return next(err);
+    }
+    sendSuccess(res, { message: "vedio removed" });
   };
   updateImage = async (req, res, next) => {
 

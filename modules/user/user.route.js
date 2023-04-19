@@ -11,7 +11,8 @@ router
   .route("/image")
   .post(checkAuth, memUpload.array("files"), controller.uploadImage)
   .put(checkAuth, controller.removeImage);
-router.route("/updateImage").post(checkAuth, memUpload.array("files"), controller.updateImage)
+router.route("/updateImage").post(checkAuth, memUpload.array("files"), controller.updateImage).put(checkAuth, controller.removeVedio);
+
 router.route("/:id").get(checkAuth, controller.findById);
 router.route("/uploadVideo").post(checkAuth, memUpload.single("file"), controller.uploadVideo)
 
