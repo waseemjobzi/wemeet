@@ -101,7 +101,7 @@ class Controller {
     }
     try {
       let pic = await uploadModel.updateOne(
-        { _id: associatedApplicant.vedio },
+        { _id: associatedApplicant.video },
         { $pull: { location: url } }
       );
     } catch (err) {
