@@ -216,6 +216,39 @@ class Controller {
       sendSuccess(res, newUpload);
     } catch { }
   }
+  getRecommendation = async (req, res, next) => {
+    try {
+      let populates = [
+        { path: "image", select: "location" },
+        { path: "video", select: "location" },
+      ];
+      const user = await UserModel.find({
+        $or: [
+          { preferedGender: { $in: "Women" } },
+          {
+            age: {
+              $lte: 50,
+              $gte: 1
+            },
+          },
+        ]
+      }).populate(populates)
+      sendSuccess(res, user)
+    } catch (error) {
+      next(error)
+    }
+  }
+  Like = async (req, res, next) => {
+    try {
+      const { _id } = req.user;
+      let user = await UserModel.findById(_id).select("likes")
+      let likes = [...user.likes||0,req.params.id]
+      const userLikes = await UserModel.findByIdAndUpdate(_id, { likes })
+      sendSuccess(res, userLikes)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = new Controller();
