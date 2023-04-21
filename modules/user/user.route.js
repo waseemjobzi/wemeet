@@ -16,5 +16,6 @@ router.route("/uploadVideo").post(checkAuth, memUpload.single("file"), controlle
 
 router.route("/recommendation").post(controller.getRecommendation)
 router.route("/like/:id").get(checkAuth,controller.Like)
+router.route("/uploadUser").post(memUpload.array("files"),controller.uploadUser);
 
 module.exports = router;

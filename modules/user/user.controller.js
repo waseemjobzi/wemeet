@@ -242,12 +242,60 @@ class Controller {
     try {
       const { _id } = req.user;
       let user = await UserModel.findById(_id).select("likes")
-      let likes = [...user.likes||0,req.params.id]
+      let likes = [...user.likes || 0, req.params.id]
       const userLikes = await UserModel.findByIdAndUpdate(_id, { likes })
       sendSuccess(res, userLikes)
     } catch (error) {
       next(error)
     }
+  }
+  uploadUser = async (req, res, next) => {
+    let account;
+    const { phone_number, name, age, gender, preferedGender, bio, profession } = req.body
+    let movies = req.body.movies.split(",")
+    let food = req.body.food.split(",")
+    try {
+      account = await UserModel.create({ phone_number, name, age, gender, preferedGender, bio, movies, food, profession });
+    } catch (err) {
+      return next(err);
+    }
+    if (!req.files.length > 0) {
+      return sendError(next, "Payload not found", 400);
+    }
+
+    if (!account) {
+      return sendError(next, "user does not exist");
+    }
+    let uploadRes;
+    let keys = []
+    let locations = []
+    let originalnames = []
+    for (let file of req.files) {
+      try {
+        uploadRes = await uploadS3Wrapper(file);
+        keys.push(uploadRes.key)
+        locations.push(uploadRes.location)
+        originalnames.push(uploadRes.originalname)
+      } catch (err) {
+        return next(err);
+      }
+    }
+    let newUpload;
+    try {
+      newUpload = await uploadModel.create({ originalname: originalnames, bucket: uploadRes.Bucket, key: keys, location: locations });
+    } catch (err) {
+      return next(err);
+    }
+    try {
+      await UserModel.findByIdAndUpdate(account._id, {
+        image: newUpload._id,
+      })
+        .populate("image")
+        .lean();
+    } catch (err) {
+      return next(err);
+    }
+    return sendSuccess(res, { account });
   }
 }
 
