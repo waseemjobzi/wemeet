@@ -246,7 +246,7 @@ class Controller {
       const userLikes = await UserModel.findByIdAndUpdate(_id, { likes })
       sendSuccess(res, userLikes)
     } catch (error) {
-      next(error)
+      sendError(next, "you have exceed you connects limit Please recharge",400)
     }
   }
   uploadUser = async (req, res, next) => {

@@ -1,6 +1,7 @@
 const { sendSuccess, sendError } = require("../../utils/response");
 const moviesModel = require("./movies.model");
 const { uploadS3Wrapper } = require("../user/upload.service");
+const connectModel = require("./connect.model");
 
 class Controller {
 
@@ -52,6 +53,17 @@ class Controller {
       sendSuccess(res, data)
     } catch (error) {
       sendError(next, "Food not found", 401)
+    }
+  }
+  connectCount = async (req, res, next) => {
+    try {
+      let count = await connectModel.findOne()
+      console.log('count', count)
+      sendSuccess(res, count)
+    }
+    catch (error) {
+      sendError(next, "something is wrong", 400);
+
     }
   }
 }

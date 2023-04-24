@@ -93,7 +93,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
+    connect: {
+      type: Number,
+      default: 5    ,
+    },
     username: {
       type: String,
     },
@@ -104,7 +107,7 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.index({
-  email: 1,
+  phone_number: 1,
 });
 
 UserSchema.methods = {
