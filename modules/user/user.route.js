@@ -15,7 +15,8 @@ router.route("/:id").get(checkAuth, controller.findById);
 router.route("/uploadVideo").post(checkAuth, memUpload.single("file"), controller.uploadVideo)
 
 router.route("/recommendation").post(controller.getRecommendation)
-router.route("/like/:id").get(checkAuth,controller.Like)
-router.route("/uploadUser").post(memUpload.array("files"),controller.uploadUser);
-
+router.route("/like/:id").get(checkAuth, controller.Like)
+router.route("/uploadUser").post(memUpload.array("files"), controller.uploadUser);
+router.put("/update_location", checkAuth, controller.update_location);
+router.post("/showLikes", checkAuth, controller.showLikes)
 module.exports = router;

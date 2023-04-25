@@ -47,22 +47,22 @@ class Controller {
   }
 
   async verifyOTP(req, res, next) {
-    const { phone_number, otp } = req.body;
+    const { phone_number, otp, isAppDownloaded = false } = req.body;
 
     let user;
     try {
-      user = await UserModel.findOne({ phone_number }).select("otp").lean();
-      if (!user) {
-        return sendError(next, "User not found", 404);
-      }
+      user = await UserModel.findOne({ phone_number }).exec();
     } catch (err) {
       return next(err);
     }
-
+    if (!user) {
+      return res.status(400).json({
+        message: "something is wrong ",
+      });
+    }
     if (parseInt(otp) !== user.otp) {
       return sendError(next, "Incorrect OTP", 401);
     }
-
     try {
       user = await UserModel.findByIdAndUpdate(
         user._id,
@@ -72,7 +72,17 @@ class Controller {
     } catch (err) {
       return next(err);
     }
-
+    if (isAppDownloaded) {
+      try {
+        await UserModel.findOneAndUpdate(
+          { phone_number },
+          { isAppDownloaded },
+          { upsert: true, new: true }
+        ).exec();
+      } catch (err) {
+        return next(err);
+      }
+    }
     const token = generateJWT({ id: user._id, role: user.role });
 
     return sendSuccess(res, {

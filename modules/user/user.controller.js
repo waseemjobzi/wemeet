@@ -1,9 +1,9 @@
 const { sendSuccess, sendError } = require("../../utils/response");
-const { getFields, s3DeleteObjects } = require("../../utils/upload");
 const UserModel = require("../user/user.model");
 const uploadModel = require("./upload.model");
 const uploadService = require("./upload.service");
 const { uploadS3Wrapper } = require("./upload.service");
+const userService = require("./user.service");
 
 class Controller {
   async updateOne(req, res, next) {
@@ -246,7 +246,7 @@ class Controller {
       const userLikes = await UserModel.findByIdAndUpdate(_id, { likes })
       sendSuccess(res, userLikes)
     } catch (error) {
-      sendError(next, "you have exceed you connects limit Please recharge",400)
+      sendError(next, "you have exceed you connects limit Please recharge", 400)
     }
   }
   uploadUser = async (req, res, next) => {
@@ -296,6 +296,28 @@ class Controller {
       return next(err);
     }
     return sendSuccess(res, { account });
+  }
+  async update_location(req, res, next) {
+    const { _id: userId } = req.user;
+    try {
+      await userService.updateUserDeviceDetails(
+        userId,
+        req.body,
+      );
+    } catch (err) {
+      return next(err);
+    }
+
+    return sendSuccess(res, { message: "Device details updated" });
+  }
+  async showLikes(req, res, next) {
+    const { _id } = req.user;
+    try {
+      let likes = await UserModel.findById(_id).select("likes").populate("likes")
+      sendSuccess(res, likes)
+    } catch (error) {
+      sendError(nexy, "not likes", 400)
+    }
   }
 }
 

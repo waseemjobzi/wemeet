@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const AddressSchema = require("../common/address.schema");
+const PlanSchema = require("../common/plan.schema");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -76,15 +77,11 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // device: {
-    //   type: DeviceSchema,
-    // },
+   
     last_location: {
       type: AddressSchema,
     },
-    // branch_location: {
-    //   type: AddressSchema,
-    // },
+    
     user_city: {
       type: String,
     },
@@ -93,9 +90,20 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    connect: {
-      type: Number,
-      default: 5    ,
+    paid: {
+      type: Boolean,
+      default: false
+    },
+    active_plan: {
+      type: PlanSchema,
+    },
+    package: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Package",
+    },
+    last_transaction:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Transaction",
     },
     username: {
       type: String,
