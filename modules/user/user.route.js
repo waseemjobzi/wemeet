@@ -14,7 +14,7 @@ router.route("/updateImage").post(checkAuth, memUpload.array("files"), controlle
 router.route("/:id").get(checkAuth, controller.findById);
 router.route("/uploadVideo").post(checkAuth, memUpload.single("file"), controller.uploadVideo)
 
-router.route("/recommendation").post(controller.getRecommendation)
+router.route("/recommendation").post(checkAuth,controller.getRecommendation)
 router.route("/like/:id").get(checkAuth, controller.Like)
 router.route("/uploadUser").post(memUpload.array("files"), controller.uploadUser);
 router.put("/update_location", checkAuth, controller.update_location);

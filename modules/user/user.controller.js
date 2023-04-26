@@ -217,18 +217,19 @@ class Controller {
     } catch { }
   }
   getRecommendation = async (req, res, next) => {
+    const { preferedGender } = req.user
     try {
       let populates = [
         { path: "image", select: "location" },
         { path: "video", select: "location" },
       ];
       const user = await UserModel.find({
-        $or: [
-          { preferedGender: { $in: "Women" } },
+        $and: [
+          { preferedGender: { $in: preferedGender } },
           {
             age: {
               $lte: 50,
-              $gte: 1
+              $gte: 15
             },
           },
         ]
@@ -312,11 +313,20 @@ class Controller {
   }
   async showLikes(req, res, next) {
     const { _id } = req.user;
+    let populates = [
+      { path: "image", select: "location" },
+      { path: "video", select: "location" },
+    ];
     try {
-      let likes = await UserModel.findById(_id).select("likes").populate("likes")
-      sendSuccess(res, likes)
+      let likes = await UserModel.findById(_id).select("likes")
+      let users = []
+      for (let data of likes.likes) {
+        let likes = await UserModel.findById(data).populate(populates)
+        users.push(likes)
+      }
+      sendSuccess(res, users)
     } catch (error) {
-      sendError(nexy, "not likes", 400)
+      sendError(next, "not likes", 400)
     }
   }
 }
