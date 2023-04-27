@@ -224,15 +224,12 @@ class Controller {
         { path: "video", select: "location" },
       ];
       const user = await UserModel.find({
-        $and: [
-          { preferedGender: { $in: preferedGender } },
-          {
-            age: {
-              $lte: 50,
-              $gte: 15
-            },
-          },
-        ]
+        preferedGender: { $in: preferedGender },
+        _id: { $ne: req.user._id },
+        age: {
+          $lte: 50,
+          $gte: 15
+        },
       }).populate(populates)
       sendSuccess(res, user)
     } catch (error) {
