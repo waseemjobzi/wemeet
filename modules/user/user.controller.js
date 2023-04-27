@@ -224,7 +224,7 @@ class Controller {
         { path: "video", select: "location" },
       ];
       const user = await UserModel.find({
-        preferedGender: { $in: preferedGender },
+        gender: { $in: preferedGender },
         _id: { $ne: req.user._id },
         age: {
           $lte: 50,
