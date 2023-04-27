@@ -326,6 +326,19 @@ class Controller {
       sendError(next, "not likes", 400)
     }
   }
+  async whoLikesMe(req, res, next) {
+    const { _id } = req.user;
+    let populates = [
+      { path: "image", select: "location" },
+      { path: "video", select: "location" },
+    ];
+    try {
+      let likes = await UserModel.find({ "likes": { $in: _id } }).populate(populates)
+      sendSuccess(res, likes)
+    } catch (error) {
+      sendError(next, "not likes", 400)
+    }
+  }
 }
 
 module.exports = new Controller();
