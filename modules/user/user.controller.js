@@ -339,6 +339,26 @@ class Controller {
       sendError(next, "not likes", 400)
     }
   }
+  async filter(req, res, next) {
+    const { preferedGender, max_age, min_age } = req.body
+    try {
+      let populates = [
+        { path: "image", select: "location" },
+        { path: "video", select: "location" },
+      ];
+      const user = await UserModel.find({
+        gender: { $in: preferedGender },
+        _id: { $ne: req.user._id },
+        age: {
+          $lte: max_age,
+          $gte: min_age
+        },
+      }).populate(populates)
+      sendSuccess(res, user)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = new Controller();

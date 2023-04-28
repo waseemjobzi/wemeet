@@ -20,5 +20,6 @@ router.route("/uploadUser").post(memUpload.array("files"), controller.uploadUser
 router.put("/update_location", checkAuth, controller.update_location);
 router.post("/showLikes", checkAuth, controller.showLikes)
 router.get("/whoLikesMe", checkAuth, controller.whoLikesMe)
+router.post("/filter",checkAuth,controller.filter)
 
 module.exports = router;
