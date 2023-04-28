@@ -92,7 +92,7 @@ class Controller {
   }
 
   async loginMobile(req, res, next) {
-    const { phone_number, otp, isAppDownloaded = false } = req.body;
+    const { phone_number } = req.body;
 
     let user;
     try {
@@ -105,39 +105,7 @@ class Controller {
         message: "something is wrong ",
       });
     }
-    if (parseInt(otp) !== user.otp) {
-      return sendError(next, "Incorrect OTP", 401);
-    }
-    try {
-      user = await UserModel.findByIdAndUpdate(
-        user._id,
-        { otp_verified: true, otp: null },
-        { new: true }
-      );
-    } catch (err) {
-      return next(err);
-    }
-
-    if (user.blocked) {
-      return sendError(
-        next,
-        "You have been reported by other users. Please contact: support@jobzi.in",
-        401
-      );
-    }
-
-    if (isAppDownloaded) {
-      try {
-        await UserModel.findOneAndUpdate(
-          { phone_number },
-          { isAppDownloaded },
-          { upsert: true, new: true }
-        ).exec();
-      } catch (err) {
-        return next(err);
-      }
-    }
-    const token = generateJWT({ id: user._id, role: user.role });
+    const token = generateJWT({ id: user._id, gender: user.gender });
 
     return sendSuccess(res, {
       token,
