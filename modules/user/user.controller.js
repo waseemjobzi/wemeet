@@ -359,6 +359,41 @@ class Controller {
       next(error)
     }
   }
+  async userActiveTrue(req, res, next) {
+    const { _id } = req.user
+    try {
+      let user = await UserModel.findByIdAndUpdate(_id, { active: true })
+      sendSuccess(res, user)
+    } catch (err) {
+      next(err)
+    }
+  }
+  async userActiveFalse(req, res, next) {
+    const { _id } = req.user
+    try {
+      let user = await UserModel.findByIdAndUpdate(_id, { active: false })
+      sendSuccess(res, user)
+    } catch (err) {
+      next(err)
+    }
+  }
+  speedDatingRecommendation = async (req, res, next) => {
+    const { preferedGender } = req.user
+    try {
+      let populates = [
+        { path: "image", select: "location" },
+        { path: "video", select: "location" },
+      ];
+      const user = await UserModel.find({
+        gender: { $in: preferedGender },
+        _id: { $ne: req.user._id },
+        active:true
+      }).populate(populates)
+      sendSuccess(res, user)
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = new Controller();

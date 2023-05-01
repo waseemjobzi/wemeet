@@ -70,18 +70,18 @@ const UserSchema = new mongoose.Schema(
     },
     active: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     otp: Number,
     otp_verified: {
       type: Boolean,
       default: false,
     },
-   
+
     last_location: {
       type: AddressSchema,
     },
-    
+
     user_city: {
       type: String,
     },
@@ -101,7 +101,7 @@ const UserSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Package",
     },
-    last_transaction:{
+    last_transaction: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Transaction",
     },

@@ -52,7 +52,8 @@ class TransactionService {
     expiry.setDate(expiry.getDate() + 30);
 
     const user = await userModel.findByIdAndUpdate(order.payee, {
-      wallet: order.amount.value,
+      wallet: order.amount,
+      paid:true,
       active_plan: {
         plan: targetPlan._id,
         start: new Date(),
