@@ -4,6 +4,7 @@ const uploadModel = require("./upload.model");
 const uploadService = require("./upload.service");
 const { uploadS3Wrapper } = require("./upload.service");
 const userService = require("./user.service");
+const { RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole } = require('agora-access-token')
 
 class Controller {
   async updateOne(req, res, next) {
@@ -360,9 +361,16 @@ class Controller {
     }
   }
   async userActiveTrue(req, res, next) {
-    const { _id } = req.user
+    const { _id: uid } = req.user
+    let appID = "0997ff4590194ddfa9aeaf9519919f4f";
+    let appCertificate = "6a04ccea333c44be89dfa485fefd34e5";
+    let channelName = req.params.channelName
+    let expirationTimeInSeconds = 60
+    let role = RtcRole.PUBLISHER
     try {
-      let user = await UserModel.findByIdAndUpdate(_id, { active: true })
+      let token = RtcTokenBuilder.buildTokenWithAccount(appID, appCertificate, channelName, uid, role, expirationTimeInSeconds);
+
+      let user = await UserModel.findByIdAndUpdate({ _id: uid }, { active: true, agoraToken: token }, { new: true })
       sendSuccess(res, user)
     } catch (err) {
       next(err)
@@ -387,7 +395,7 @@ class Controller {
       const user = await UserModel.find({
         gender: { $in: preferedGender },
         _id: { $ne: req.user._id },
-        active:true
+        active: true
       }).populate(populates)
       sendSuccess(res, user)
     } catch (error) {

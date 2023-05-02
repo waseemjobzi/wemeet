@@ -97,6 +97,9 @@ const UserSchema = new mongoose.Schema(
     active_plan: {
       type: PlanSchema,
     },
+    agoraToken: {
+      type: String,
+    },
     package: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Package",

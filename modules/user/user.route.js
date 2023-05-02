@@ -21,7 +21,7 @@ router.put("/update_location", checkAuth, controller.update_location);
 router.post("/showLikes", checkAuth, controller.showLikes)
 router.get("/whoLikesMe", checkAuth, controller.whoLikesMe)
 router.post("/filter",checkAuth,controller.filter)
-router.get("/userActiveTrue",checkAuth,controller.userActiveTrue)
+router.get("/userActiveTrue/:channelName",checkAuth,controller.userActiveTrue)
 router.get("/userActiveFalse",checkAuth,controller.userActiveFalse)
 router.get("/speedDatingRecommendation",checkAuth,controller.speedDatingRecommendation)
 
