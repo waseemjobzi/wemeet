@@ -335,7 +335,7 @@ class Controller {
       let likes = await UserModel.find({ "likes": { $in: _id } }).populate(populates)
       sendSuccess(res, likes)
     } catch (error) {
-      sendError(next, "not likes", 400)
+      sendError(next, "not likes by someone", 400)
     }
   }
   async filter(req, res, next) {
