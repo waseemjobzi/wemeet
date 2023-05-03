@@ -101,15 +101,13 @@ class Controller {
       return sendError(next, "User does not exist", 401);
     }
     try {
-      let pic = await uploadModel.updateOne(
-        { _id: associatedApplicant.video },
-        { $pull: { location: url } }
-      );
+      await uploadModel.deleteOneOne({ _id: associatedApplicant.image },);
+      await UserModel.findByIdAndUpdate({ _id: userId }, { video: null })
     } catch (err) {
       return next(err);
     }
-    sendSuccess(res, { message: "vedio removed" });
-  };
+    sendSuccess(res, { message: "video removed" });
+  }
   updateImage = async (req, res, next) => {
 
     if (!req.files.length > 0) {
