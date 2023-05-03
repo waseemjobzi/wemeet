@@ -98,7 +98,7 @@ class Controller {
       .lean()
       .exec();
     if (!associatedApplicant) {
-      return sendError(next, "User does not exist", 401);
+      return sendError(next, "video does not exist", 401);
     }
     try {
       await uploadModel.deleteOneOne({ _id: associatedApplicant.image },);
