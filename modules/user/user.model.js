@@ -100,6 +100,9 @@ const UserSchema = new mongoose.Schema(
     agoraToken: {
       type: String,
     },
+     channelName: {
+      type: String,
+    },
     package: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Package",

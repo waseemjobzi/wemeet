@@ -370,7 +370,7 @@ class Controller {
     try {
       let token = RtcTokenBuilder.buildTokenWithAccount(appID, appCertificate, channelName, uid, role, expirationTimeInSeconds);
 
-      let user = await UserModel.findByIdAndUpdate({ _id: uid }, { active: true, agoraToken: token }, { new: true })
+      let user = await UserModel.findByIdAndUpdate({ _id: uid }, { active: true, agoraToken: token, channelName: channelName }, { new: true })
       sendSuccess(res, user)
     } catch (err) {
       next(err)
