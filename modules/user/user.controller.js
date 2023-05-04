@@ -97,11 +97,11 @@ class Controller {
     const associatedApplicant = await UserModel.findById({ _id: userId })
       .lean()
       .exec();
-    if (!associatedApplicant) {
+    if (!associatedApplicant.video) {
       return sendError(next, "video does not exist", 401);
     }
     try {
-      await uploadModel.deleteOneOne({ _id: associatedApplicant.image },);
+      await uploadModel.deleteOne({ _id: associatedApplicant.video });
       await UserModel.findByIdAndUpdate({ _id: userId }, { video: null })
     } catch (err) {
       return next(err);
@@ -246,6 +246,19 @@ class Controller {
       sendError(next, "you have exceed you connects limit Please recharge", 400)
     }
   }
+  DeleteLike = async (req, res, next) => {
+    try {
+      const { _id } = req.user;
+      let dislike = await UserModel.findByIdAndUpdate(
+        { _id: _id },
+        { $pull: { likes: req.params.id } }, { new: true }
+      );
+      sendSuccess(res, dislike)
+    } catch (error) {
+      sendError(next, "something went wrong", 400)
+    }
+  }
+
   uploadUser = async (req, res, next) => {
     let account;
     const { phone_number, name, age, gender, preferedGender, bio, profession } = req.body
@@ -396,6 +409,26 @@ class Controller {
         active: true
       }).populate(populates)
       sendSuccess(res, user)
+    } catch (error) {
+      next(error)
+    }
+  }
+  connects = async (req, res, next) => {
+    const { _id } = req.user
+    try {
+      let populates = [
+        { path: "image", select: "location" },
+        { path: "video", select: "location" },
+      ];
+      let like = await UserModel.findById({ _id }).select("likes")
+      let users = []
+      for (let lke of like.likes) {
+        let user = await UserModel.findOne({ _id: lke, likes: { $in: _id } }).populate(populates)
+        if (user) {
+          users.push(user)
+        }
+      }
+      sendSuccess(res, users)
     } catch (error) {
       next(error)
     }

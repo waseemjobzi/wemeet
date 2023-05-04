@@ -16,6 +16,7 @@ router.route("/uploadVideo").post(checkAuth, memUpload.single("file"), controlle
 
 router.route("/recommendation").post(checkAuth,controller.getRecommendation)
 router.route("/like/:id").get(checkAuth, controller.Like)
+router.route("/deleteLike/:id").get(checkAuth, controller.DeleteLike)
 router.route("/uploadUser").post(memUpload.array("files"), controller.uploadUser);
 router.put("/update_location", checkAuth, controller.update_location);
 router.post("/showLikes", checkAuth, controller.showLikes)
@@ -24,6 +25,8 @@ router.post("/filter",checkAuth,controller.filter)
 router.get("/userActiveTrue/:channelName",checkAuth,controller.userActiveTrue)
 router.get("/userActiveFalse",checkAuth,controller.userActiveFalse)
 router.get("/speedDatingRecommendation",checkAuth,controller.speedDatingRecommendation)
+router.post("/connects",checkAuth,controller.connects)
+
 
 
 
