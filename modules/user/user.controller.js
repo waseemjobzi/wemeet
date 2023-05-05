@@ -1,5 +1,6 @@
 const { sendSuccess, sendError } = require("../../utils/response");
 const UserModel = require("../user/user.model");
+const connectionModel = require("./connection.model");
 const uploadModel = require("./upload.model");
 const uploadService = require("./upload.service");
 const { uploadS3Wrapper } = require("./upload.service");
@@ -425,9 +426,57 @@ class Controller {
       for (let lke of like.likes) {
         let user = await UserModel.findOne({ _id: lke, likes: { $in: _id } }).populate(populates)
         if (user) {
+          let data = await connectionModel.create({ user1: _id, user2: user._id })
+          if (data) {
+            await UserModel.findByIdAndUpdate(
+              { _id: lke },
+              { $pull: { likes: _id } }
+            );
+            await UserModel.findByIdAndUpdate(
+              { _id: _id },
+              { $pull: { likes: lke } }
+            );
+          }
           users.push(user)
         }
       }
+      sendSuccess(res, users)
+    } catch (error) {
+      next(error)
+    }
+  }
+  getConnection = async (req, res, next) => {
+    const { _id } = req.user
+    try {
+      let users = await connectionModel.find({ $or: [{ user1: _id }, { user2: _id }] })
+        .populate([
+          {
+            path: "user1",
+            populate: [
+              {
+                path: "image",
+                select: "location",
+              },
+              {
+                path: "video",
+                select: "location",
+              },
+            ],
+          },
+          {
+            path: "user2",
+            populate: [
+              {
+                path: "image",
+                select: "location",
+              },
+              {
+                path: "video",
+                select: "location",
+              },
+            ],
+          },
+        ])
       sendSuccess(res, users)
     } catch (error) {
       next(error)

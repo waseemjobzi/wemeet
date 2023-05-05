@@ -25,7 +25,8 @@ router.post("/filter",checkAuth,controller.filter)
 router.get("/userActiveTrue/:channelName",checkAuth,controller.userActiveTrue)
 router.get("/userActiveFalse",checkAuth,controller.userActiveFalse)
 router.get("/speedDatingRecommendation",checkAuth,controller.speedDatingRecommendation)
-router.post("/connects",checkAuth,controller.connects)
+router.get("/connects",checkAuth,controller.connects)
+router.get("/getConnection",checkAuth,controller.getConnection)
 
 
 

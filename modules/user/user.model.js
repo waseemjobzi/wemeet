@@ -29,6 +29,9 @@ const UserSchema = new mongoose.Schema(
     gender: {
       type: String,
     },
+    city: {
+      type: String,
+    },
     preferedGender: {
       type: [String],
     },
