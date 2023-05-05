@@ -427,7 +427,6 @@ class Controller {
         let user = await UserModel.findOne({ _id: lke, likes: { $in: _id } }).populate(populates)
         if (user) {
           let data = await connectionModel.create({ user1: _id, user2: user._id })
-          if (data) {
             await UserModel.findByIdAndUpdate(
               { _id: lke },
               { $pull: { likes: _id } }
@@ -436,7 +435,6 @@ class Controller {
               { _id: _id },
               { $pull: { likes: lke } }
             );
-          }
           users.push(user)
         }
       }
