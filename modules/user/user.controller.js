@@ -232,7 +232,6 @@ class Controller {
         },
       }).populate(populates)
       let connection = await connectionModel.find({ $or: [{ user1: req.user._id }, { user2: req.user._id }] })
-
       sendSuccess(res,  user,connection)
     } catch (error) {
       next(error)
@@ -369,7 +368,9 @@ class Controller {
           $gte: min_age
         },
       }).populate(populates)
-      sendSuccess(res, user)
+      let connection = await connectionModel.find({ $or: [{ user1: req.user._id }, { user2: req.user._id }] })
+      sendSuccess(res,  user,connection)
+
     } catch (error) {
       next(error)
     }
