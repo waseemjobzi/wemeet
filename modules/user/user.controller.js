@@ -424,14 +424,15 @@ class Controller {
       let like = await UserModel.findById({ _id }).select("likes")
       let users = []
       for (let lke of like.likes) {
-        let user = await UserModel.findOne({ _id: lke, likes: { $in: _id } }).populate(populates)
+        let user = await UserModel.findById({ _id: lke, likes: { $in: _id } }).populate(populates)
+
         if (user) {
           let data = await connectionModel.create({ user1: _id, user2: user._id })
-            await UserModel.findByIdAndUpdate(
+          await UserModel.findByIdAndUpdate(
               { _id: lke },
               { $pull: { likes: _id } }
             );
-            await UserModel.findByIdAndUpdate(
+           await UserModel.findByIdAndUpdate(
               { _id: _id },
               { $pull: { likes: lke } }
             );
