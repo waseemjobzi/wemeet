@@ -1,6 +1,7 @@
 const { sendSuccess, sendError } = require("../../utils/response");
 const UserModel = require("../user/user.model");
 const connectionModel = require("./connection.model");
+const notificationModel = require("./notification.model");
 const uploadModel = require("./upload.model");
 const uploadService = require("./upload.service");
 const { uploadS3Wrapper } = require("./upload.service");
@@ -243,9 +244,16 @@ class Controller {
       let user = await UserModel.findById(_id).select("likes")
       let likes = [...user.likes || 0, req.params.id]
       const userLikes = await UserModel.findByIdAndUpdate(_id, { likes })
+      await notificationModel.create({
+        sender: _id,
+        receiver: req.params.id,
+        type: "LIKE",
+        message: "Someone likes you"
+
+      })
       sendSuccess(res, userLikes)
     } catch (error) {
-      sendError(next, "you have exceed you connects limit Please recharge", 400)
+      sendError(next, "something is wrong", 400)
     }
   }
   DeleteLike = async (req, res, next) => {
@@ -255,6 +263,12 @@ class Controller {
         { _id: _id },
         { $pull: { likes: req.params.id } }, { new: true }
       );
+      await notificationModel.create({
+        sender: _id,
+        receiver: req.params.id,
+        type: "DISLIKE",
+        message: "Someone remove you from like"
+      })
       sendSuccess(res, dislike)
     } catch (error) {
       sendError(next, "something went wrong", 400)
@@ -439,6 +453,12 @@ class Controller {
             { _id: _id },
             { $pull: { likes: lke } }
           );
+          await notificationModel.create({
+            sender: _id,
+            receiver: lke,
+            type: "CONNECT",
+            message: "Someone is having crush on you"
+          })
           users.push(user)
         }
       }
@@ -450,9 +470,9 @@ class Controller {
   deleteConnection = async (req, res, next) => {
     try {
       let users = await connectionModel.findByIdAndDelete({ _id: req.params.id })
-      if(users){
+      if (users) {
         sendSuccess(res, users)
-      }else{
+      } else {
         return sendError(next, "connnection does not exist", 400);
       }
     } catch (error) {
@@ -479,6 +499,14 @@ class Controller {
           },
         ]).select("user2")
       sendSuccess(res, users)
+    } catch (error) {
+      next(error)
+    }
+  }
+  getNotification = async (req, res, next) => {
+    try {
+      let notification = await notificationModel.find({ receiver: req.params.id })
+      sendSuccess(res, notification)
     } catch (error) {
       next(error)
     }

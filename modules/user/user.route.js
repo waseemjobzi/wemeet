@@ -28,6 +28,8 @@ router.get("/speedDatingRecommendation",checkAuth,controller.speedDatingRecommen
 router.get("/connects",checkAuth,controller.connects)
 router.get("/getConnection",checkAuth,controller.getConnection)
 router.get("/deleteConnection/:id",checkAuth,controller.deleteConnection)
+router.get("/getNotification/:id",checkAuth,controller.getNotification)
+
 
 
 
