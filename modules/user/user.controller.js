@@ -231,7 +231,9 @@ class Controller {
           $gte: 15
         },
       }).populate(populates)
-      sendSuccess(res, user)
+      let connection = await connectionModel.find({ $or: [{ user1: req.user._id }, { user2: req.user._id }] })
+
+      sendSuccess(res,  user,connection)
     } catch (error) {
       next(error)
     }
@@ -429,13 +431,13 @@ class Controller {
         if (user) {
           let data = await connectionModel.create({ user1: _id, user2: user._id })
           await UserModel.findByIdAndUpdate(
-              { _id: lke },
-              { $pull: { likes: _id } }
-            );
-           await UserModel.findByIdAndUpdate(
-              { _id: _id },
-              { $pull: { likes: lke } }
-            );
+            { _id: lke },
+            { $pull: { likes: _id } }
+          );
+          await UserModel.findByIdAndUpdate(
+            { _id: _id },
+            { $pull: { likes: lke } }
+          );
           users.push(user)
         }
       }
