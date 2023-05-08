@@ -232,7 +232,7 @@ class Controller {
         },
       }).populate(populates)
       let connection = await connectionModel.find({ $or: [{ user1: req.user._id }, { user2: req.user._id }] })
-      sendSuccess(res,  user,connection)
+      sendSuccess(res, user, connection)
     } catch (error) {
       next(error)
     }
@@ -369,7 +369,7 @@ class Controller {
         },
       }).populate(populates)
       let connection = await connectionModel.find({ $or: [{ user1: req.user._id }, { user2: req.user._id }] })
-      sendSuccess(res,  user,connection)
+      sendSuccess(res, user, connection)
 
     } catch (error) {
       next(error)
@@ -442,6 +442,14 @@ class Controller {
           users.push(user)
         }
       }
+      sendSuccess(res, users)
+    } catch (error) {
+      next(error)
+    }
+  }
+  deleteConnection = async (req, res, next) => {
+    try {
+      let users = await connectionModel.findByIdAndDelete({ _id: req.params.id })
       sendSuccess(res, users)
     } catch (error) {
       next(error)

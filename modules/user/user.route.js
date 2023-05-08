@@ -27,6 +27,7 @@ router.get("/userActiveFalse",checkAuth,controller.userActiveFalse)
 router.get("/speedDatingRecommendation",checkAuth,controller.speedDatingRecommendation)
 router.get("/connects",checkAuth,controller.connects)
 router.get("/getConnection",checkAuth,controller.getConnection)
+router.get("/deleteConnection/:id",checkAuth,controller.deleteConnection)
 
 
 
