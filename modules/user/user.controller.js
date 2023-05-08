@@ -263,12 +263,6 @@ class Controller {
         { _id: _id },
         { $pull: { likes: req.params.id } }, { new: true }
       );
-      await notificationModel.create({
-        sender: _id,
-        receiver: req.params.id,
-        type: "DISLIKE",
-        message: "Someone remove you from like"
-      })
       sendSuccess(res, dislike)
     } catch (error) {
       sendError(next, "something went wrong", 400)
