@@ -450,7 +450,11 @@ class Controller {
   deleteConnection = async (req, res, next) => {
     try {
       let users = await connectionModel.findByIdAndDelete({ _id: req.params.id })
-      sendSuccess(res, users)
+      if(users){
+        sendSuccess(res, users)
+      }else{
+        return sendError(next, "connnection does not exist", 400);
+      }
     } catch (error) {
       next(error)
     }
@@ -460,19 +464,6 @@ class Controller {
     try {
       let users = await connectionModel.find({ $or: [{ user1: _id }, { user2: _id }] })
         .populate([
-          {
-            path: "user1",
-            populate: [
-              {
-                path: "image",
-                select: "location",
-              },
-              {
-                path: "video",
-                select: "location",
-              },
-            ],
-          },
           {
             path: "user2",
             populate: [
@@ -486,7 +477,7 @@ class Controller {
               },
             ],
           },
-        ])
+        ]).select("user2")
       sendSuccess(res, users)
     } catch (error) {
       next(error)
