@@ -7,7 +7,8 @@ const uploadService = require("./upload.service");
 const { uploadS3Wrapper } = require("./upload.service");
 const userService = require("./user.service");
 const { RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole } = require('agora-access-token')
-
+const xlsx = require("xlsx");
+const fs = require("fs");
 class Controller {
   async updateOne(req, res, next) {
     const { _id } = req.user;
@@ -324,6 +325,15 @@ class Controller {
         userId,
         req.body,
       );
+      await UserModel.findByIdAndUpdate({
+        "active_plan.end": {
+          $lte: new Date(),
+        },
+        "active_plan.active": true,
+      },
+        {
+          "active_plan.active": false,
+        })
     } catch (err) {
       return next(err);
     }
@@ -518,6 +528,37 @@ class Controller {
     } catch (error) {
       next(error)
     }
+  }
+  async excelUploadUser(req, res, next) {
+    console.log(`processing`)
+    if (!req.file) {
+      return sendError(next, "Payload not found", 400);
+    }
+    console.log(`processing file ${req.file.path}`);
+    const wb = xlsx.readFile(req.file.path);
+    let docs;
+    try {
+      docs = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    } catch (err) {
+      fs.unlink(req.file.path, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+      return next(err);
+    }
+
+    console.log(`${docs.length} docs recieved`);
+    let users;
+
+    try {
+      users = await userService.uploadUserdata(docs);
+    } catch (err) {
+      return next(err);
+    }
+    console.log("user created ", users);
+
+    return sendSuccess(res, { message: "user created" }, null, 201);
   }
 }
 

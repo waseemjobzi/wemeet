@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { checkAuth } = require("../../middlewares/authorization");
-const { memUpload } = require("../../middlewares/upload");
+const { memUpload, localUpload } = require("../../middlewares/upload");
 const controller = require("./user.controller");
 const router = Router();
 
@@ -29,6 +29,7 @@ router.get("/connects",checkAuth,controller.connects)
 router.get("/getConnection",checkAuth,controller.getConnection)
 router.get("/deleteConnection/:id",checkAuth,controller.deleteConnection)
 router.get("/getNotification/:id",checkAuth,controller.getNotification)
+router.route("/excelUploadUser").post(localUpload.single("file"), controller.excelUploadUser);
 
 
 
