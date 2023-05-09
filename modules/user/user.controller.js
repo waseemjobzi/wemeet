@@ -499,7 +499,21 @@ class Controller {
   }
   getNotification = async (req, res, next) => {
     try {
-      let notification = await notificationModel.find({ receiver: req.params.id }).populate("sender")
+      let notification = await notificationModel.find({ receiver: req.params.id }).populate([
+        {
+          path: "sender",
+          populate: [
+            {
+              path: "image",
+              select: "location",
+            },
+            {
+              path: "video",
+              select: "location",
+            },
+          ],
+        },
+      ])
       sendSuccess(res, notification)
     } catch (error) {
       next(error)
