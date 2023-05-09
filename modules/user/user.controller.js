@@ -499,7 +499,7 @@ class Controller {
   }
   getNotification = async (req, res, next) => {
     try {
-      let notification = await notificationModel.find({ receiver: req.params.id })
+      let notification = await notificationModel.find({ receiver: req.params.id }).populate("sender")
       sendSuccess(res, notification)
     } catch (error) {
       next(error)
