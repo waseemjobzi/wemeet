@@ -319,21 +319,23 @@ class Controller {
     return sendSuccess(res, { account });
   }
   async update_location(req, res, next) {
-    const { _id: userId } = req.user;
+    const { _id: userId,active_plan } = req.user;
     try {
       await userService.updateUserDeviceDetails(
         userId,
         req.body,
       );
-      await UserModel.findByIdAndUpdate({
-        "active_plan.end": {
-          $lte: new Date(),
+      if (active_plan) {
+        await UserModel.findByIdAndUpdate({
+          "active_plan.end": {
+            $lte: new Date(),
+          },
+          "active_plan.active": true,
         },
-        "active_plan.active": true,
-      },
-        {
-          "active_plan.active": false,
-        })
+          {
+            "active_plan.active": false,
+          })
+      }
     } catch (err) {
       return next(err);
     }
