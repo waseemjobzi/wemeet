@@ -12,10 +12,23 @@ const fs = require("fs");
 class Controller {
   async updateOne(req, res, next) {
     const { _id } = req.user;
-    console.log(req.body, '_id', _id)
     let account;
     try {
       account = await UserModel.findByIdAndUpdate(_id, req.body, { new: true }).populate("image");
+      if (req.body.gender === "Women") {
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + 30);
+        await UserModel.findByIdAndUpdate(_id, {
+          paid: true,
+          active_plan: {
+            plan: "6447800358b5d4a28059e443",
+            start: new Date(),
+            end: expiry,
+            active: true,
+            trialing: false,
+          },
+        })
+      }
     } catch (err) {
       return next(err);
     }
@@ -326,7 +339,7 @@ class Controller {
         req.body,
       );
       if (active_plan) {
-         await UserModel.updateOne({
+        await UserModel.updateOne({
           $and: [
             { id: userId },
             {
