@@ -3,11 +3,11 @@ const UserModel = require("../user/user.model");
 const { generateOTP } = require("../../utils/auth");
 const { sendSuccess, sendError } = require("../../utils/response");
 const { generateJWT } = require("../../utils/jwt");
-const request = require('request');
+let unirest = require("unirest");
 
 class Controller {
-  async sendOTP(req, res, next) {
-    const { phone_number } = req.body;
+  async sendOTP(reqe, res, next) {
+    const { phone_number } = reqe.body;
 
     let otp = generateOTP();
     let user;
@@ -30,15 +30,27 @@ class Controller {
     } catch (err) {
       return next(err);
     }
-    request(
-      ` https://api2.growwsaas.com/fe/api/v1/send?username=jobzi&password=Jobzi@$123&unicode=false&from=JOBZII&to=${phone_number}&text=${otp}%20is%20the%20OTP%20for%20your%20mobile%20number%20verification%20from%20JOBZII%20(Please%20do%20not%20disclose%20the%20OTP%20to%20anyone.)%0ACall%20%26%20Chat%20with%20nearby%20Candidates%20%26%20Freelancers%20in%20seconds%0APlease%20write%20us%20at%20-%20${`support@jobzi.in`}%20for%20any%20queries%20or%20suggestions.%0APlease%20visit%20-%20${`www.jobzi.in`}%20for%20more%20details.%0A&dltContentId=1507166368857575940`,
-      { json: true },
-      (err, res, body) => {
-        if (err) {
-          return console.log(err);
-        }
-      }
-    );
+
+    let req = unirest("GET", "https://www.fast2sms.com/dev/bulkV2");
+
+    req.query({
+      "authorization": process.env.SMS_API_KEY,
+      "sender_id": "TXTIND",
+      "message": `Hi, ${otp} is your One-Time Password for Jobzi.`,
+      "route": "v3",
+      "numbers": phone_number
+    });
+
+    req.headers({
+      "cache-control": "no-cache"
+    });
+
+
+    req.end(function (res) {
+      if (res.error) throw new Error(res.error);
+
+      console.log(res.body);
+    });
     return sendSuccess(res, {
       message: "OTP has been sent!",
       otp: otp,
