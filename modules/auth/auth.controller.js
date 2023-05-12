@@ -36,7 +36,7 @@ class Controller {
     req.query({
       "authorization": process.env.SMS_API_KEY,
       "sender_id": "TXTIND",
-      "message": `Hi, ${otp} is your One-Time Password for Jobzi.`,
+      "message": `Hi, ${otp} is your One-Time Password for Shona.`,
       "route": "v3",
       "numbers": phone_number
     });
