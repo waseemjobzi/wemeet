@@ -579,6 +579,37 @@ class Controller {
 
     return sendSuccess(res, { message: "user created" }, null, 201);
   }
+  getallUsers = async (req, res, next) => {
+    try {
+      if (!req.query.phone_number && !req.query.gender) {
+        const user = await UserModel.find()
+        sendSuccess(res, user)
+      }
+      if (req.query.phone_number && req.query.gender) {
+        const user = await UserModel.find({
+          phone_number: { $regex: req.query.phone_number, $options: "i" },
+          gender: req.query.gender
+        })
+        sendSuccess(res, user)
+      }
+      if (req.query.phone_number) {
+        const user = await UserModel.find({
+          phone_number: { $regex: req.query.phone_number, $options: "i" },
+
+        })
+        sendSuccess(res, user)
+      }
+      if (req.query.gender) {
+        const user = await UserModel.find(
+          {
+            gender: req.query.gender
+          })
+        sendSuccess(res, user)
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = new Controller();
