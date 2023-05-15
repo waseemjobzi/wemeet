@@ -31,6 +31,8 @@ router.get("/deleteConnection/:id",checkAuth,controller.deleteConnection)
 router.get("/getNotification/:id",checkAuth,controller.getNotification)
 router.route("/excelUploadUser").post(localUpload.single("file"), controller.excelUploadUser);
 router.route("/getallUsers").get(controller.getallUsers)
+router.route("/changeUserStatus").get(controller.changeUserStatus)
+
 
 
 

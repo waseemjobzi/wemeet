@@ -610,6 +610,21 @@ class Controller {
       next(error)
     }
   }
+  changeUserStatus = async (req, res, next) => {
+    try {
+      if (req.query.status=="true") {
+        const user = await UserModel.findOneAndUpdate({ _id: req.query.id }, { active: false }, { new: true })
+        sendSuccess(res, user)
+      }
+      if (req.query.status=="false") {
+        const user = await UserModel.findOneAndUpdate({ _id: req.query.id }, { active: true }, { new: true })
+        sendSuccess(res, user)
+      }
+    }
+    catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = new Controller();
